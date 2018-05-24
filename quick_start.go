@@ -24,6 +24,16 @@ func main()  {
 		c.String(http.StatusOK, "hello %s", name)
 	})
 
+
+	// querystring parameters 
+	// eg: http://localhost:8080/welcome?firstname=lin&lastname=moumou
+	router.GET("/welcome", func (c *gin.Context)  {
+		firstname := c.DefaultQuery("firstname", "Guest")
+		lastname := c.Query("lastname")
+
+		c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
+	})
+
 	// listen and serve on 0.0.0.0:8080
 	router.Run()
 }
