@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -45,6 +47,22 @@ func main()  {
 			"message": message,
 			"nick": nick,
 		})
+	})
+
+	// Upload files
+	/*
+	curl -X POST http://localhost:8080/upload \
+		-F "file=@./README.md" \
+		-H "Content-Type: multipart/form-data"
+	*/
+	router.POST("/upload", func (c *gin.Context)  {
+		file, _ := c.FormFile("file")
+
+		log.Println(file.Filename)
+
+		c.SaveUploadedFile(file, "upload_README.md")
+
+		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 	})
 
 	// listen and serve on 0.0.0.0:8080
