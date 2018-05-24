@@ -34,6 +34,19 @@ func main()  {
 		c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
 	})
 
+
+	// Multipart/Urlencoded Form (建议使用 postman 把数据发过来)
+	router.POST("/form_post", func (c *gin.Context)  {
+		message := c.PostForm("message")
+		nick := c.DefaultPostForm("nick", "anonymous")
+
+		c.JSON(http.StatusOK, gin.H{
+			"status": "posted",
+			"message": message,
+			"nick": nick,
+		})
+	})
+
 	// listen and serve on 0.0.0.0:8080
 	router.Run()
 }
