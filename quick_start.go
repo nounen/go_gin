@@ -65,6 +65,19 @@ func main()  {
 		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 	})
 
+	// Multiple files
+	// 多文件上传. 略
+
+
+	// Grouping routes
+	v1 := router.Group("/v1")
+
+	v1.GET("/user/:name", func (c *gin.Context)  {
+		name := c.Param("name")
+
+		c.String(http.StatusOK, "v1 route group: %s", name)
+	})
+
 	// listen and serve on 0.0.0.0:8080
 	router.Run()
 }
