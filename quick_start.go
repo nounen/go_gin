@@ -75,6 +75,23 @@ func main() {
 		c.String(http.StatusOK, "v1 route group: %s", name)
 	})
 
-	// listen and serve on 0.0.0.0:8080
+	// 1. isten and serve on 0.0.0.0:8080
 	router.Run()
+
+	// 2. 除了默认服务器中 router.Run() 的方式外，还可以用 http.ListenAndServe()，比如
+	// http.ListenAndServe(":8080", router)
+
+	// 2. 或者自定义 HTTP 服务器的配置：
+	// s := &http.Server{
+	// 	Addr:           ":8080",
+	// 	Handler:        router,
+	// 	ReadTimeout:    10 * time.Second,
+	// 	WriteTimeout:   10 * time.Second,
+	// 	MaxHeaderBytes: 1 << 20,
+	// }
+	// s.ListenAndServe()
+
+	// 3. HTTP 服务器替换方案 想无缝重启、停机吗? 以下有几种方式：
+	// 可以使用 fvbock/endless 来替换默认的 ListenAndServe https://github.com/fvbock/endless
+	// endless.ListenAndServe(":4242", router)
 }
