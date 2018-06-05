@@ -75,6 +75,28 @@ func main() {
 		c.String(http.StatusOK, "v1 route group: %s", name)
 	})
 
+	// 控制器 -- 数据解析绑定
+	// 带标签的结构体
+	type Login struct {
+		User     string `form:"user" json:"user" binding:"required"`
+		Password string `form:"password" json:"password" binding:"required"`
+	}
+
+	// 绑定JSON的例子 ({"user": "manu", "password": "123"})
+	router.POST("/loginJSON", func(c *gin.Context) {
+		var json Login
+
+		// 根据请求头中 content-type 自动推断: c.Bind(&form)
+
+		if c.BindJSON(&json) == nil {
+			if json.User == "manu" && json.Password == "123" {
+				c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
+			} else {
+				c.JSON(http.StatusUnauthorized, gin.H{"status": "unauthorized"})
+			}
+		}
+	})
+
 	// 1. isten and serve on 0.0.0.0:8080
 	router.Run()
 
