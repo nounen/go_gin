@@ -120,6 +120,58 @@ func main() {
 		// c.YAML(http.StatusOK, msg)
 	})
 
+	// 响应 -- 视图响应
+	/*
+		router.LoadHTMLGlob("templates/*")
+		//router.LoadHTMLFiles("templates/template1.html", "templates/template2.html")
+		router.GET("/index", func(c *gin.Context) {
+			c.HTML(
+				http.StatusOK,
+				"index.tmpl",
+				gin.H{
+					"title": "Main website",
+				})
+		})
+	*/
+
+	// 不同文件夹下模板名字可以相同，此时需要 LoadHTMLGlob() 加载两层模板路径
+	// 也可以同时定义两个模板在 posts/index.tmpl 下面
+	router.LoadHTMLGlob("templates/**/*")
+	router.GET("/posts/index", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "posts/index.tmpl", gin.H{
+			"title": "Posts",
+		})
+
+		c.HTML(http.StatusOK, "users/index.tmpl", gin.H{
+			"title": "Users",
+		})
+	})
+
+	// gin 也可以使用自定义的模板引擎，如下
+	/*
+		import "html/template"
+
+		func main() {
+			router := gin.Default()
+			html := template.Must(template.ParseFiles("file1", "file2"))
+			router.SetHTMLTemplate(html)
+			router.Run(":8080")
+		}
+	*/
+
+	// 响应 -- 文件响应
+	//获取当前文件的相对路径
+	router.Static("/assets", "./assets")
+
+	//获取相对路径下的文件
+	router.StaticFile("/assets_index", "./assets/index.php")
+
+	// 响应 -- 重定向
+	router.GET("/redirect", func(c *gin.Context) {
+		//支持内部和外部的重定向
+		c.Redirect(http.StatusMovedPermanently, "http://www.baidu.com/")
+	})
+
 	// 1. isten and serve on 0.0.0.0:8080
 	router.Run()
 
