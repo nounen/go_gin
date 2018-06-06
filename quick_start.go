@@ -1,6 +1,7 @@
 package main
 
 import (
+	"time"
 	"fmt"
 	"log"
 	"net/http"
@@ -170,6 +171,27 @@ func main() {
 	router.GET("/redirect", func(c *gin.Context) {
 		//支持内部和外部的重定向
 		c.Redirect(http.StatusMovedPermanently, "http://www.baidu.com/")
+    })
+    
+    // 异步响应: 立即响应页面, 异步的代码在响应后继续执行 (TODO: 如果异步里面的逻辑出错呢, 用户根本获取不到啊...)
+    router.GET("/long_async", func (c *gin.Context)  {
+        cCp := c.Copy()
+
+        go func ()  {
+            time.Sleep(5 * time.Second)
+
+            // 注意使用只读上下文: TODO: 没理解
+            log.Println("Done! in path " + cCp.Request.URL.Path)
+        }()
+    })
+
+    // 同步响应: 等五秒页面才会停止刷新; 如果是同一个浏览器打开相同页面(url), 那么要等第一个标签响应完第二个标签才做响应;
+    // (也就是几乎同时打开的情况下 第一个标签 5 秒响应, 第二个标签 10 秒响应, 第三个标签 15秒才响应 ...);
+	router.GET("/long_sync", func(c *gin.Context) {
+		time.Sleep(5 * time.Second)
+
+		// 注意可以使用原始上下文
+		log.Println("Done! in path " + c.Request.URL.Path)
 	})
 
 	// 1. isten and serve on 0.0.0.0:8080

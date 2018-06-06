@@ -1,6 +1,7 @@
 ## gin
 * https://github.com/gin-gonic/gin
 
+* https://github.com/skybebe/gin-doc-cn
 
 ### install
 * `go get github.com/gin-gonic/gin`
