@@ -1,21 +1,57 @@
 package main
 
 import (
-	"time"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+// 模拟私有数据
+var secrets = gin.H{
+	"foo":    gin.H{"email": "foo@bar.com", "phone": "123433"},
+	"austin": gin.H{"email": "austin@example.com", "phone": "666"},
+	"lena":   gin.H{"email": "lena@guapa.com", "phone": "523443"},
+}
+
 func main() {
 	router := gin.Default()
 
+	// 中间件: 1.全局中间件; 2.单路由的中间件，可以加任意多个; 3.群组路由的中间件
+
+	// 1. 全局中间件
+	router.Use(Logger())
+
+	// 3. 群组路由中间件 -- 使用 gin.BasicAuth 中间件，设置授权用户
+	authorized := router.Group("/admin", gin.BasicAuth(gin.Accounts{
+		"foo":    "bar",
+		"austin": "1234",
+		"lena":   "hello2",
+		"manu":   "4321",
+	}))
+
+	authorized.GET("/secrets", func(c *gin.Context) {
+		// 获取提交的用户名（AuthUserKey）
+		user := c.MustGet(gin.AuthUserKey).(string)
+
+		if secret, ok := secrets[user]; ok {
+			c.JSON(http.StatusOK, gin.H{"user": user, "secret": secret})
+		} else {
+			c.JSON(http.StatusOK, gin.H{"user": user, "secret": "NO SECRET :("})
+		}
+	})
+
 	// quick start
 	router.GET("/ping", func(c *gin.Context) {
+		// 获取 gin 中间件 Logger 上下文中的变量
+		// TODO: 这里 .(string) 放后面又是什么操作? 类型转换?
+		example := c.MustGet("example").(string)
+
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
+			"example": example,
 		})
 	})
 
@@ -171,22 +207,22 @@ func main() {
 	router.GET("/redirect", func(c *gin.Context) {
 		//支持内部和外部的重定向
 		c.Redirect(http.StatusMovedPermanently, "http://www.baidu.com/")
-    })
-    
-    // 异步响应: 立即响应页面, 异步的代码在响应后继续执行 (TODO: 如果异步里面的逻辑出错呢, 用户根本获取不到啊...)
-    router.GET("/long_async", func (c *gin.Context)  {
-        cCp := c.Copy()
+	})
 
-        go func ()  {
-            time.Sleep(5 * time.Second)
+	// 异步响应: 立即响应页面, 异步的代码在响应后继续执行 (TODO: 如果异步里面的逻辑出错呢, 用户根本获取不到啊...)
+	router.GET("/long_async", func(c *gin.Context) {
+		cCp := c.Copy()
 
-            // 注意使用只读上下文: TODO: 没理解
-            log.Println("Done! in path " + cCp.Request.URL.Path)
-        }()
-    })
+		go func() {
+			time.Sleep(5 * time.Second)
 
-    // 同步响应: 等五秒页面才会停止刷新; 如果是同一个浏览器打开相同页面(url), 那么要等第一个标签响应完第二个标签才做响应;
-    // (也就是几乎同时打开的情况下 第一个标签 5 秒响应, 第二个标签 10 秒响应, 第三个标签 15秒才响应 ...);
+			// 注意使用只读上下文: TODO: 没理解
+			log.Println("Done! in path " + cCp.Request.URL.Path)
+		}()
+	})
+
+	// 同步响应: 等五秒页面才会停止刷新; 如果是同一个浏览器打开相同页面(url), 那么要等第一个标签响应完第二个标签才做响应;
+	// (也就是几乎同时打开的情况下 第一个标签 5 秒响应, 第二个标签 10 秒响应, 第三个标签 15秒才响应 ...);
 	router.GET("/long_sync", func(c *gin.Context) {
 		time.Sleep(5 * time.Second)
 
@@ -213,4 +249,25 @@ func main() {
 	// 3. HTTP 服务器替换方案 想无缝重启、停机吗? 以下有几种方式：
 	// 可以使用 fvbock/endless 来替换默认的 ListenAndServe https://github.com/fvbock/endless
 	// endless.ListenAndServe(":4242", router)
+}
+
+// 中间件
+func Logger() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		t := time.Now()
+
+		// 在gin上下文中定义变量
+		c.Set("example", "123456")
+
+		// 请求前
+
+		c.Next() // 处理请求
+
+		latency := time.Since(t)
+		log.Print(latency)
+
+		// access the status we are sending
+		status := c.Writer.Status()
+		log.Println(status)
+	}
 }
