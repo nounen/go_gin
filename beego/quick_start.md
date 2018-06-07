@@ -46,3 +46,24 @@ $ exec $SHELL
 * 更多介绍: https://beego.me/quickstart
 
 * ab 测试: `$ ab -n 10000 -c 100 http://127.0.0.1:8080/`
+
+
+## bee 工具简介
+* 安装 bee 工具: `go get github.com/beego/bee`
+    * bee 可执行文件默认存放在 $GOPATH/bin 里面
+
+* `bee new <项目名>` 就可以创建一个新的项目 (web 项目)
+    * 但是注意该命令必须在 `$GOPATH/src` 下执行。最后会在 `$GOPATH/src` 相应目录下生成如下目录结构的项目
+
+* `bee api <项目名>` 就可以创建一个新的项目 (api 项目)
+
+* `bee run <项目路径>`: bee run 命令是监控 beego 的项目，通过 fsnotify监控文件系统 (也就是文件改动会自己编译)
+
+* 更多 bee 命令:
+    ```go
+    bee pack
+    bee bale
+    bee version
+    bee generate
+    bee migrate
+    ```
