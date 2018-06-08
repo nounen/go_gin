@@ -109,8 +109,10 @@ $ exec $SHELL
     
     * 也可以不使用模版，直接用 `this.Ctx.WriteString` 输出字符串
 
-
 4. model 逻辑
+    * 我们的 bee new 例子不存在 Model 的演示，但是 bee api 应用中存在 model 的应用
+
+    * 如果您的 model 逻辑里面存在着可以复用的东西，那么就抽取出来变成一个模块
 
 5. view 渲染
 
