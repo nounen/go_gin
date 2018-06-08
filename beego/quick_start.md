@@ -115,5 +115,6 @@ $ exec $SHELL
     * 如果您的 model 逻辑里面存在着可以复用的东西，那么就抽取出来变成一个模块
 
 5. view 渲染
+    * 我们在 Controller 里面把数据赋值给了 `data（map 类型）`，然后我们在模板中就直接通过 key 访问 .Website 和 .Email 。这样就做到了数据的输出
 
 6. 静态文件处理
