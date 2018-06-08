@@ -82,6 +82,18 @@ $ exec $SHELL
     * `cd quickstart; bee run` 运行项目 
 
 2. 路由设置
+    * 入口文件 main.go, 它引入了路由文件 `_ "quickstart/routers"`, 此时会自动执行 routers.go 的 `init()` 函数
+
+    * 再回来看看 main 函数里面的 beego.Run， beego.Run 执行之后，我们看到的效果好像只是监听服务端口这个过程，但是它内部做了很多事情：
+        * 解析配置文件: conf/app.conf` (开启的端口，是否开启 session，应用名称等信息)
+        * 执行用户的 hookfun
+        * 是否开启 session
+        * 是否编译模板
+        * 是否开启文档功能
+        * 是否启动管理模块
+        * 监听服务端口
+    
+    * 一旦 run 起来之后，我们的服务就监听在两个端口了，一个服务端口 `8080` 作为对外服务，另一个 `8088` 端口实行对内监控。
 
 3. controller 运行机制
 
