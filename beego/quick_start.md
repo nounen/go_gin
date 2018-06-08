@@ -67,3 +67,26 @@ $ exec $SHELL
     bee generate
     bee migrate
     ```
+
+
+## 快速入门
+* 设置多个 gopath 目录
+    * 在当前目录创建 `src` 目录, 执行 `source SetGoPath.sh`
+    * 进入 `src` 目录 执行 `bee new xxx` 创建新项目
+
+1. bee 工具新建项目
+    * 进入 `src` 目录 执行 `bee new quickstart`
+
+    * main.go 是入口文件
+
+    * `cd quickstart; bee run` 运行项目 
+
+2. 路由设置
+
+3. controller 运行机制
+
+4. model 逻辑
+
+5. view 渲染
+
+6. 静态文件处理
