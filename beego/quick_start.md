@@ -96,6 +96,19 @@ $ exec $SHELL
     * 一旦 run 起来之后，我们的服务就监听在两个端口了，一个服务端口 `8080` 作为对外服务，另一个 `8088` 端口实行对内监控。
 
 3. controller 运行机制
+    * controller/default.go: 个控制器里面内嵌了 `beego.Controller`，这就是 __Go 的嵌入方式__，也就是 MainController 自动拥有了所有 `beego.Controller` 的方法
+
+    * beego.Controller 拥有很多方法, 通过 __重写__ 的方式来实现这些方法，而我们上面的代码就是重写了 Get 方法
+
+    * 模板数据赋值到 `this.Data` 中; 模板文件赋值到 `this.TplName`
+        * 如果用户不设置模板参数，那么默认会去到模板目录的 `Controller/<方法名>.tpl` 查找
+
+        * `{{.XX}}` 标签渲染模板数据
+
+        * 用户设置了模板之后系统会自动的调用 Render 函数（这个函数是在 beego.Controller 中实现的），所以无需用户自己来调用渲染
+    
+    * 也可以不使用模版，直接用 `this.Ctx.WriteString` 输出字符串
+
 
 4. model 逻辑
 
