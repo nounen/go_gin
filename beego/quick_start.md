@@ -118,3 +118,11 @@ $ exec $SHELL
     * 我们在 Controller 里面把数据赋值给了 `data（map 类型）`，然后我们在模板中就直接通过 key 访问 .Website 和 .Email 。这样就做到了数据的输出
 
 6. 静态文件处理
+    * beego 默认注册了 static 目录为静态处理的目录，注册样式：URL 前缀和映射的目录（在/main.go文件中beego.Run()之前加入）：
+        * `StaticDir["/static"] = "static"`
+
+    * 用户可以设置多个静态文件处理目录:
+    ```go
+    beego.SetStaticPath("/down1", "download1")
+    beego.SetStaticPath("/down2", "download2")
+    ```
