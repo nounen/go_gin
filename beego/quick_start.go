@@ -16,6 +16,8 @@ func (controller *MainController) Get() {
 }
 
 func main() {
+	beego.Run(":8888")
+
 	beego.Router("/", &MainController{})
 
 	beego.Run()
