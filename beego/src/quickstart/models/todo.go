@@ -20,6 +20,8 @@ func init() {
 	orm.RegisterModel(new(Todo))
 }
 
+// TODO: model 的 CURD 都应该自己写 (现在是生成的)
+
 // AddTodo insert a new Todo into database and returns
 // last inserted Id on success.
 func AddTodo(m *Todo) (id int64, err error) {
