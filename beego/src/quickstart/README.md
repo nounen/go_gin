@@ -15,3 +15,7 @@
 
 ### 可参: 打包, 代码生成(models, controller, view, docs)
 * https://www.cnblogs.com/zhangboyu/p/7760693.html
+
+
+### ab 测试 -- 感觉挺客观的, 虽然只是一个列表查询
+* ab -n 1000 -c100 http://localhost:8000/todo
