@@ -47,12 +47,14 @@ func GetAllTodo(query map[string]string, fields []string, sortby []string, order
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Todo))
+
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
 	}
+
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -112,6 +114,7 @@ func GetAllTodo(query map[string]string, fields []string, sortby []string, order
 		}
 		return ml, nil
 	}
+
 	return nil, err
 }
 
