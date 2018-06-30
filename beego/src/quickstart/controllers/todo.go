@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	// TODO: 如果只引入 models 下指定的文件是否执行效率更高? eg: 如只导入 todo 模型 `todo "quickstart/models"`
 	"quickstart/models"
 	"strconv"
 
@@ -75,6 +76,7 @@ func (c *TodoController) Update() {
 	c.Ctx.Redirect(302, url)
 }
 
+// TODO: 以下的业务能提取出来吗? 比如提取到 services 目录下
 // getId 获取路由上的 :id 参数, 并做类型转换
 func (c *TodoController) getId() int64 {
 	// string 转 int64, 如何直接拿到想要类型呢
