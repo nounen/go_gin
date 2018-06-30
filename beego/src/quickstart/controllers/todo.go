@@ -37,38 +37,60 @@ func (c *TodoController) getTodos() []interface{} {
 
 // Index 列表
 func (c *TodoController) Index() {
-	c.Data["todo"] = c.getTodo(0)
+	c.Data["todo"] = c.getTodo(defaultId)
 	c.Data["todos"] = c.getTodos()
 	c.TplName = "todo/index.tpl"
 }
 
 // Store 创建数据 TODO: 此处应添加数据库校验
 func (c *TodoController) Store() {
-	todo := c.getTodoFromPOST()
-
-	if _, err := models.AddTodo(&todo); err == nil {
+	if _, err := models.AddTodo(c.getTodoFromPOST()); err == nil {
 		c.Data["message"] = "添加成功"
 	} else {
 		c.Data["message"] = "添加失败"
 	}
 
-	c.Data["todo"] = c.getTodo(0)
+	c.Data["todo"] = c.getTodo(defaultId)
 	c.Data["todos"] = c.getTodos()
 	c.TplName = "todo/index.tpl"
 }
 
 // Show 查看详情
 func (c *TodoController) Show() {
-	// string 转 int64, 如何直接拿到想要类型呢
-	id, _ := strconv.ParseInt(c.Ctx.Input.Param(":id"), 10, 64)
+	id := c.getId()
+	c.Data["id"] = id
 	c.Data["todo"] = c.getTodo(id)
 	c.Data["todos"] = c.getTodos()
 	c.TplName = "todo/index.tpl"
 }
 
+// Update 更新数据
+func (c *TodoController) Update() {
+	todo := c.getTodoFromPOST()
+	todo.Id = c.getId()
+	models.UpdateTodoById(todo)
+
+	url := "/todo/" + c.getIdString()
+	beego.Debug(url)
+	c.Ctx.Redirect(302, url)
+}
+
+// getId 获取路由上的 :id 参数, 并做类型转换
+func (c *TodoController) getId() int64 {
+	// string 转 int64, 如何直接拿到想要类型呢
+	id, _ := strconv.ParseInt(c.getIdString(), 10, 64)
+
+	return id
+}
+
+// getIdString 获取路由上的 :id 参数
+func (c *TodoController) getIdString() string {
+	return c.Ctx.Input.Param(":id")
+}
+
 // getTodoFromPOST 获取表单提交数据
-func (c *TodoController) getTodoFromPOST() models.Todo {
-	todo := models.Todo{}
+func (c *TodoController) getTodoFromPOST() *models.Todo {
+	todo := &models.Todo{}
 	todo.Title = c.GetString("title")
 	todo.Sort, _ = c.GetInt("sort", defaultSort)
 	todo.Status, _ = c.GetInt("status", defaultStatus)
