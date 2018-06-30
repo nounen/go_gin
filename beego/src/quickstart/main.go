@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "quickstart/routers"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
@@ -18,4 +19,3 @@ func main() {
 	orm.Debug = true // 调试模式打印查询语句
 	beego.Run()
 }
-
