@@ -107,7 +107,7 @@ func (c *TodoController) getTodos() []interface{} {
 		[]string{"sort"},
 		[]string{"asc"},
 		0,
-		10,
+		100,
 	)
 
 	return todos
