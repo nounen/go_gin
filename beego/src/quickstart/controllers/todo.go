@@ -17,23 +17,9 @@ type TodoController struct {
 	beego.Controller
 }
 
-// TODO: 控制器的 init 如何使用
-//func (c *TodoController) Init(ctx *context.Context, controllerName, actionName string, app interface{}) {
-//	c.Data["message"] = ""
-//}
-
-// TODO: 此处应为数据库查询, 且分页
-func (c *TodoController) getTodos() []interface{} {
-	todos, _ := models.GetAllTodo(
-		map[string]string{},
-		[]string{"Id", "Title", "Sort", "Status"},
-		[]string{"sort"},
-		[]string{"asc"},
-		0,
-		10,
-	)
-
-	return todos
+// Prepare 优先执行于其他方法
+func (c *TodoController) Prepare() {
+	beego.Debug("Prepare: 优先执行于下面这些函数")
 }
 
 // Index 列表
@@ -72,7 +58,6 @@ func (c *TodoController) Update() {
 	models.UpdateTodoById(todo)
 
 	url := "/todo/" + c.getIdString()
-	beego.Debug(url)
 	c.Ctx.Redirect(302, url)
 }
 
@@ -112,4 +97,18 @@ func (c *TodoController) getTodo(id int64) *models.Todo {
 		Status: defaultStatus,
 	}
 	return todo
+}
+
+// TODO: 此处应为数据库查询, 且分页
+func (c *TodoController) getTodos() []interface{} {
+	todos, _ := models.GetAllTodo(
+		map[string]string{},
+		[]string{"Id", "Title", "Sort", "Status"},
+		[]string{"sort"},
+		[]string{"asc"},
+		0,
+		10,
+	)
+
+	return todos
 }
