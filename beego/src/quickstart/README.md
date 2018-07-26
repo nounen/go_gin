@@ -1,6 +1,8 @@
 ## 初始化
 ```shell
-source ../../SetGoPath.sh
+cd ../../
+source SetGoPath.sh
+
 
 go get -u github.com/astaxie/beego
 go get -u github.com/beego/bee
