@@ -30,3 +30,11 @@ func TagFirst(db *gorm.DB) {
 	db.First(tag)
 	fmt.Printf("%T: %v", tag, tag)
 }
+
+// TagList 多条数据
+func TagList(db *gorm.DB) {
+	tags := new([]Tag)
+	// tags := new([]*Tag) // 这样也行。方便后续遍历 orm 操作？
+	db.Where("id > ?", 0).Find(tags)
+	fmt.Printf("%T: %v", tags, tags)
+}

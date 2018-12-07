@@ -24,5 +24,6 @@ func main() {
 	// db.SingularTable(true)
 
 	// 查询案例
-	model.TagFirst(db)
+	// model.TagFirst(db)
+	model.TagList(db)
 }
