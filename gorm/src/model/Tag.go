@@ -36,5 +36,9 @@ func TagList(db *gorm.DB) {
 	tags := new([]Tag)
 	// tags := new([]*Tag) // 这样也行。方便后续遍历 orm 操作？
 	db.Where("id > ?", 0).Find(tags)
-	fmt.Printf("%T: %v", tags, tags)
+	fmt.Printf("%T: %v \n", tags, tags)
+
+	// for _, tag := range *tags {
+	// 	fmt.Printf("%T: %v \n", tag, tag)
+	// }
 }
