@@ -23,6 +23,10 @@ func (tag *Tag) TableName() string {
 // TagFirst 第一条数据
 func TagFirst(db *gorm.DB) {
 	tag := new(Tag)
+
+	// 查询条件放在结构体
+	// tag.ID = 2
+
 	db.First(tag)
 	fmt.Printf("%T: %v", tag, tag)
 }
